@@ -257,6 +257,28 @@
             vertical-align: middle;
             margin-left: 5px;
         }
+
+        /* Estilos para os controles de áudio */
+        #volumeControl {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 100px;
+            z-index: 1000;
+        }
+
+        #musicToggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #9147ff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -340,6 +362,15 @@
         </div>
     </div>
 
+    <audio id="backgroundMusic" loop>
+        <source src="https://example.com/path-to-your-audio-file.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+    <button id="musicToggle">
+        <i class="fas fa-music"></i>
+    </button>
+
     <script>
         // Loading Screen
         window.addEventListener('load', () => {
@@ -378,47 +409,38 @@
         let isPlaying = false;
 
         musicToggle.addEventListener('click', () => {
-          if (isPlaying) {
-            music.pause();
-            musicToggle.innerHTML = '<i class="fas fa-music"></i>';
-          } else {
-            music.muted = false;  // Ensure it's unmuted when manually played
-            music.play();
-            musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
-          }
-          isPlaying = !isPlaying;
+            if (isPlaying) {
+                music.pause();
+                musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                music.muted = false;  // Ensure it's unmuted when manually played
+                music.play();
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
         });
 
         // Autoplay music when page loads
         window.addEventListener('load', () => {
-          // We need to mute the audio first to comply with autoplay policies
-          music.muted = true;
-          music.play().then(() => {
-            // Unmute after a successful play event
-            music.muted = false;
-            isPlaying = true;
-            musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
-          }).catch(error => {
-            console.log("Autoplay was prevented:", error);
-            // Keep the play button if autoplay fails
-            musicToggle.innerHTML = '<i class="fas fa-music"></i>';
-          });
+            // We need to mute the audio first to comply with autoplay policies
+            music.muted = true;
+            music.play().then(() => {
+                // Unmute after a successful play event
+                music.muted = false;
+                isPlaying = true;
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(error => {
+                console.log("Autoplay was prevented:", error);
+                // Keep the play button if autoplay fails
+                musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+            });
         });
-
 
         const volumeControl = document.getElementById('volumeControl');
         volumeControl.addEventListener('input', (e) => {
-          music.volume = e.target.value;
+            music.volume = e.target.value;
         });
     </script>
-    <audio id="backgroundMusic" loop>
-      <source src="https://example.com/path-to-your-audio-file.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-    <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1" style="position: fixed; bottom: 70px; right: 20px; width: 100px; z-index: 1000;">
-    <button id="musicToggle" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: #9147ff; color: white; border: none; padding: 10px; border-radius: 50%; cursor: pointer;">
-      <i class="fas fa-music"></i>
-    </button>
 </body>
 </html>
 
